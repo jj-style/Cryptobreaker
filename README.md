@@ -1,6 +1,10 @@
 # Cryptobreaker
 Cryptography tools provided by a GUI interface created in python with tkinter  
   
+Dependencies:  
+* tkinter  
+* matplotlib  
+* python 3.x
   
 Current decryption tools supported:  
 * Frequency Analysis  
