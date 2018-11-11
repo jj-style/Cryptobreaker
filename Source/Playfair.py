@@ -1,4 +1,5 @@
 import string
+from RemovePunctuation import *
 
 playfair_matrix = [[0 for i in range(5)] for dimensions in range(5)]
 
@@ -75,7 +76,7 @@ def rule3(x1,y1,x2,y2):
 def PrepareCipher(cipher):
     cipher = list(cipher)
     while " " in cipher:
-        message.remove(" ")
+        cipher.remove(" ")
     cipher = [x for x in cipher if x]
     chunkedCipher = []
     tempListA = []
@@ -103,6 +104,7 @@ def Drule2(x1,y1,x2,y2):
     
 def PlayfairEncode(plaintext,key):
     ConvertTo2D(CreateAlphabet(key))
+    plaintext = RemovePunctuation(plaintext)
     plaintext = PrepareMessage(plaintext)
     ciphertext = []
     while len(plaintext) > 0:
@@ -122,6 +124,7 @@ def PlayfairEncode(plaintext,key):
 
 def PlayfairDecode(ciphertext,key):
     ConvertTo2D(CreateAlphabet(key))
+    ciphertext = RemovePunctuation(ciphertext)
     ciphertext = PrepareCipher(ciphertext)
     plaintext = []
     while len(ciphertext) > 0:
