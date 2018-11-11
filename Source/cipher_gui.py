@@ -8,6 +8,7 @@ from PolyalphabeticAffine import *
 from Autokey import *
 from IndexOfCoincidence import *
 from FrequencyAnalysis import *
+from Playfair import *
 
 import matplotlib
 matplotlib.use("TkAgg")
@@ -27,7 +28,6 @@ class Page(tk.Frame):
         return self.page_name
 
     def show_plaintext(self,plaintext):
-        #tk.Label(self,text="Plaintext").pack()
         if self.output_text == None:
             self.output_text = tk.Text(self,height=5,width=56)
             self.output_text.pack()
@@ -249,9 +249,9 @@ class PageBeaufort(Page): #Beaufort
        plaintext = main.input_text.get("1.0","end").strip().lower()
        german_variant = self.german.get()
        if german_variant == 0:
-           ciphertext = BeaufortEncode(ciphertext,keyword)
+           ciphertext = BeaufortEncode(plaintext,keyword)
        else:
-           ciphertext = BeaufortEncode(ciphertext,keyword,german=True)
+           ciphertext = BeaufortEncode(plaintext,keyword,german=True)
        self.show_plaintext(ciphertext)
 
 class PagePolyAffine(Page): #PolyAffine
@@ -286,7 +286,7 @@ class PagePolyAffine(Page): #PolyAffine
        for key in keys:
            affine_keys.append(list(map(int(key.split(",")))))
        plaintext = main.input_text.get("1.0","end").strip().lower()
-       ciphertext = PolyAffineEncode(ciphertext,affine_keys)
+       ciphertext = PolyAffineEncode(plaintext,affine_keys)
        self.show_plaintext(ciphertext)
 
 class PageAutokey(Page): #Autokey
@@ -308,7 +308,29 @@ class PageAutokey(Page): #Autokey
    def Encode(self):
        keyword = self.keyword_entry.get().lower()
        plaintext = main.input_text.get("1.0","end").strip().lower()
-       ciphertext = AutokeyEncode(ciphertext,keyword)
+       ciphertext = AutokeyEncode(plaintext,keyword)
+       self.show_plaintext(ciphertext)
+
+class PagePlayfair(Page): #Playfair
+   def __init__(self, *args, **kwargs):
+       Page.__init__(self,"Playfair",*args, **kwargs)
+
+       self.keyword_entry = tk.Entry(self)
+       self.keyword_entry.pack()
+       self.keyword_entry.insert("end","Keyword")
+
+       SubmitButtons(self)
+
+   def Decode(self):
+       keyword = self.keyword_entry.get().lower()
+       ciphertext = main.input_text.get("1.0","end").strip().lower()
+       plaintext = PlayfairDecode(ciphertext,keyword)
+       self.show_plaintext(plaintext)
+
+   def Encode(self):
+       keyword = self.keyword_entry.get().lower()
+       plaintext = main.input_text.get("1.0","end").strip().lower()
+       ciphertext = PlayfairEncode(plaintext,keyword)
        self.show_plaintext(ciphertext)
        
 def SubmitButtons(self):
@@ -334,7 +356,8 @@ class MainView(tk.Frame):
         PageVigenere(self),
         PageBeaufort(self),
         PagePolyAffine(self),
-        PageAutokey(self)
+        PageAutokey(self),
+        PagePlayfair(self)
         ]
 
         container = tk.Frame(self)
@@ -343,7 +366,6 @@ class MainView(tk.Frame):
             page.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
             
 
-        #tk.Label(self,text="Ciphertext").pack()
         self.input_text = tk.Text(self,height=5,width=56)
         self.input_text.pack()
 
