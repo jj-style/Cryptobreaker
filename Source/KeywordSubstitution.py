@@ -17,6 +17,7 @@ def CreateAlphabet(key,default_alph_shift=0):
 
 def KeywordSubstitutionEncode(plaintext,key,default_alph_shift=0):
     default_alphabet = list(string.ascii_lowercase)
+    key = key.lower()
     key_alphabet = CreateAlphabet(key,default_alph_shift=0)
     ciphertext = ""
     for letter in plaintext:

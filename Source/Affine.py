@@ -5,7 +5,10 @@ alphabet = list(string.ascii_lowercase)
 def AffineEncode(ciphertext,a,b):
     plaintext = ""
     for letter in ciphertext:
-        plaintext += alphabet[((alphabet.index(letter)*a) + b) % len(alphabet)]
+        if letter in alphabet:
+            plaintext += alphabet[((alphabet.index(letter)*a) + b) % len(alphabet)]
+        else:
+            plaintext += letter
     return plaintext
 
 

@@ -18,7 +18,6 @@ Current decryption tools supported:
 * Beaufort cipher (including german variant)  
 * Autokey/Autoclave cipher  
   
-(I will be adding option for encryption soon)
   
 More ciphers to be addded soon. I have programmed some more but have not implememnted them to my GUI yet.  
 I have also programmed a semi-automatic vigenere cipher breaker which I am currently implementing.  

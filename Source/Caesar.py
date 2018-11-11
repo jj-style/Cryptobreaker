@@ -5,7 +5,10 @@ alphabet = list(string.ascii_lowercase)
 def CaesarEncode(text,key):
     ciphertext = ""
     for letter in text:
-        ciphertext += alphabet[(alphabet.index(letter) + key) % len(alphabet)]
+        if letter in alphabet:
+            ciphertext += alphabet[(alphabet.index(letter) + key) % len(alphabet)]
+        else:
+            ciphertext += letter
     return ciphertext
 
 def CaesarDecode(ciphertext,key,to_upper=False):

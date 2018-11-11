@@ -18,6 +18,7 @@ class Page(tk.Frame):
     def __init__(self,name, *args, **kwargs):
         tk.Frame.__init__(self, *args, **kwargs)
         self.page_name = name
+        self.output_text = None
         
     def show(self):
         self.lift()
@@ -26,9 +27,11 @@ class Page(tk.Frame):
         return self.page_name
 
     def show_plaintext(self,plaintext):
-        tk.Label(self,text="Plaintext").pack()
-        self.output_text = tk.Text(self,height=5,width=56)
-        self.output_text.pack()
+        #tk.Label(self,text="Plaintext").pack()
+        if self.output_text == None:
+            self.output_text = tk.Text(self,height=5,width=56)
+            self.output_text.pack()
+        self.output_text.delete("1.0","end")
         self.output_text.insert("end",plaintext)
 
 
@@ -87,16 +90,22 @@ class PageCaesar(Page):  #Caesar
    def __init__(self, *args, **kwargs):
        Page.__init__(self,"Caesar Shift", *args, **kwargs)
 
+       frame1 = tk.Frame(self)
+       frame1.pack()
+
+       tk.Label(frame1,text="Shift").pack(side="left")
        self.key = tk.IntVar()
-       self.shift = tk.Scale(self, variable=self.key, from_=0, to=26, orient="horizontal",label="Shift")
-       self.shift.pack()
+       self.shift = tk.Scale(frame1, variable=self.key, from_=0, to=26, orient="horizontal")
+       self.shift.pack(side="left")
+
+       frame_check_button = tk.Frame(self)
+       frame_check_button.pack()
 
        self.bruteforce = tk.IntVar()
-       self.bruteforce_button = tk.Checkbutton(self,variable=self.bruteforce,text="Bruteforce")
+       self.bruteforce_button = tk.Checkbutton(frame_check_button,variable=self.bruteforce,text="Bruteforce")
        self.bruteforce_button.pack()
 
-       self.submit = tk.Button(self,text="Decrypt",command=self.Decode)
-       self.submit.pack()
+       SubmitButtons(self)
        
    def Decode(self):
        key = self.shift.get()
@@ -108,23 +117,34 @@ class PageCaesar(Page):  #Caesar
            plaintext = CaesarBruteforce(ciphertext)
        self.show_plaintext(plaintext)
 
+   def Encode(self):
+       key = self.shift.get()
+       plaintext = main.input_text.get("1.0","end").strip().lower()
+       ciphertext = CaesarEncode(plaintext,key)
+       self.show_plaintext(ciphertext)
+
 class PageAffine(Page): #Affine
    def __init__(self, *args, **kwargs):
        Page.__init__(self,"Affine Shift", *args, **kwargs)
 
+       frame1 = tk.Frame(self)
+       frame1.pack()
+
        self.a = tk.IntVar()
        self.b = tk.IntVar()
-       self.aslider = tk.Scale(self, variable=self.a, from_=0, to=26, orient="horizontal",label="a")
-       self.bslider = tk.Scale(self, variable=self.b, from_=0, to=26, orient="horizontal",label="b")
-       self.aslider.pack()
-       self.bslider.pack()
+       self.aslider = tk.Scale(frame1, variable=self.a, from_=0, to=26, orient="horizontal",label="a")
+       self.bslider = tk.Scale(frame1, variable=self.b, from_=0, to=26, orient="horizontal",label="b")
+       self.aslider.pack(side="left")
+       self.bslider.pack(side="left")
+
+       frame_check_button = tk.Frame(self)
+       frame_check_button.pack()
 
        self.bruteforce = tk.IntVar()
-       self.bruteforce_button = tk.Checkbutton(self,variable=self.bruteforce,text="Bruteforce")
+       self.bruteforce_button = tk.Checkbutton(frame_check_button,variable=self.bruteforce,text="Bruteforce")
        self.bruteforce_button.pack()
 
-       self.submit = tk.Button(self,text="Decrypt",command=self.Decode)
-       self.submit.pack()
+       SubmitButtons(self)
 
    def Decode(self):
        a = self.a.get()
@@ -137,16 +157,25 @@ class PageAffine(Page): #Affine
            plaintext = AffineBruteforce(ciphertext)
        self.show_plaintext(plaintext)
 
+   def Encode(self):
+       a = self.a.get()
+       b = self.b.get()
+       plaintext = main.input_text.get("1.0","end").strip().lower()
+       ciphertext = AffineEncode(plaintext,key)
+       self.show_plaintext(ciphertext)
+
 class PageKeywordSub(Page): #Keyword Substitution
    def __init__(self, *args, **kwargs):
        Page.__init__(self,"Keyword Substitution",*args, **kwargs)
 
-       self.keyword_entry = tk.Entry(self)
+       frame1 = tk.Frame(self)
+       frame1.pack()
+
+       self.keyword_entry = tk.Entry(frame1)
        self.keyword_entry.pack()
        self.keyword_entry.insert("end","Keyword")
 
-       self.submit = tk.Button(self,text="Decrypt",command=self.Decode)
-       self.submit.pack()
+       SubmitButtons(self)
 
    def Decode(self):
        keyword = self.keyword_entry.get().lower()
@@ -154,16 +183,24 @@ class PageKeywordSub(Page): #Keyword Substitution
        plaintext = KeywordSubstitutionDecode(ciphertext,keyword)
        self.show_plaintext(plaintext)
 
+   def Encode(self):
+       keyword = self.keyword_entry.get().lower()
+       plaintext = main.input_text.get("1.0","end").strip().lower()
+       ciphertext = KeywordSubstitutionEncode(plaintext,keyword)
+       self.show_plaintext(ciphertext)
+
 class PageVigenere(Page): #Vigenere
    def __init__(self, *args, **kwargs):
        Page.__init__(self,"Vigenere",*args, **kwargs)
 
-       self.keyword_entry = tk.Entry(self)
+       frame1 = tk.Frame(self)
+       frame1.pack()
+
+       self.keyword_entry = tk.Entry(frame1)
        self.keyword_entry.pack()
        self.keyword_entry.insert("end","Key")
 
-       self.submit = tk.Button(self,text="Decrypt",command=self.Decode)
-       self.submit.pack()
+       SubmitButtons(self)
 
    def Decode(self):
        keyword = self.keyword_entry.get().lower()
@@ -171,44 +208,67 @@ class PageVigenere(Page): #Vigenere
        plaintext = VigenereDecode(ciphertext,keyword)
        self.show_plaintext(plaintext)
 
+   def Encode(self):
+       keyword = self.keyword_entry.get().lower()
+       plaintext = main.input_text.get("1.0","end").strip().lower()
+       ciphertext = VigenereEncode(plaintext,keyword)
+       self.show_plaintext(ciphertext)
+
 class PageBeaufort(Page): #Beaufort
    def __init__(self, *args, **kwargs):
        Page.__init__(self, "Beaufort",*args, **kwargs)
 
-       self.keyword_entry = tk.Entry(self)
+       frame1 = tk.Frame(self)
+       frame1.pack()
+
+       self.keyword_entry = tk.Entry(frame1)
        self.keyword_entry.pack()
        self.keyword_entry.insert("end","Key")
 
+       frame_check_button = tk.Frame(self)
+       frame_check_button.pack()
+
        self.german = tk.IntVar()
-       self.german_button = tk.Checkbutton(self,variable=self.german,text="German Variant")
+       self.german_button = tk.Checkbutton(frame_check_button,variable=self.german,text="German Variant")
        self.german_button.pack()
 
-       self.submit = tk.Button(self,text="Decrypt",command=self.Decode)
-       self.submit.pack()
+       SubmitButtons(self)
 
    def Decode(self):
        keyword = self.keyword_entry.get().lower()
        ciphertext = main.input_text.get("1.0","end").strip().lower()
        german_variant = self.german.get()
        if german_variant == 0:
-           plaintext = BeaufortDecode(ciphertext,key)
+           plaintext = BeaufortDecode(ciphertext,keyword)
        else:
-           plaintext = BeaufortDecode(ciphertext,key,german=True)
+           plaintext = BeaufortDecode(ciphertext,keyword,german=True)
        self.show_plaintext(plaintext)
+
+   def Encode(self):
+       keyword = self.keyword_entry.get().lower()
+       plaintext = main.input_text.get("1.0","end").strip().lower()
+       german_variant = self.german.get()
+       if german_variant == 0:
+           ciphertext = BeaufortEncode(ciphertext,keyword)
+       else:
+           ciphertext = BeaufortEncode(ciphertext,keyword,german=True)
+       self.show_plaintext(ciphertext)
 
 class PagePolyAffine(Page): #PolyAffine
    def __init__(self, *args, **kwargs):
        Page.__init__(self,"Polyalphabetic Affine",*args, **kwargs)
 
-       self.keys_entry = tk.Entry(self)
+       frame1 = tk.Frame(self)
+       frame1.pack()
+
+       self.keys_entry = tk.Entry(frame1)
        self.keys_entry.pack()
        self.keys_entry.insert("end","|a1,b1|a2,b2|...|")
 
-       self.submit = tk.Button(self,text="Decrypt",command=self.Decode)
-       self.submit.pack()
+       SubmitButtons(self)
 
    def Decode(self):
-       keys = self.keys_entry.get() #work our converting string list '[1]' to list [1]
+       keys = self.keys_entry.get()
        keys = keys.split("|")
        keys = [x for x in keys if x]
        affine_keys = []
@@ -218,6 +278,17 @@ class PagePolyAffine(Page): #PolyAffine
        plaintext = PolyAffineDecode(ciphertext,affine_keys)
        self.show_plaintext(plaintext)
 
+   def Encode(self):
+       keys = self.keys_entry.get()
+       keys = keys.split("|")
+       keys = [x for x in keys if x]
+       affine_keys = []
+       for key in keys:
+           affine_keys.append(list(map(int(key.split(",")))))
+       plaintext = main.input_text.get("1.0","end").strip().lower()
+       ciphertext = PolyAffineEncode(ciphertext,affine_keys)
+       self.show_plaintext(ciphertext)
+
 class PageAutokey(Page): #Autokey
    def __init__(self, *args, **kwargs):
        Page.__init__(self,"Autokey",*args, **kwargs)
@@ -226,15 +297,29 @@ class PageAutokey(Page): #Autokey
        self.keyword_entry.pack()
        self.keyword_entry.insert("end","Key")
 
-       self.submit = tk.Button(self,text="Decrypt",command=self.Decode)
-       self.submit.pack()
+       SubmitButtons(self)
 
    def Decode(self):
        keyword = self.keyword_entry.get().lower()
        ciphertext = main.input_text.get("1.0","end").strip().lower()
        plaintext = AutokeyDecode(ciphertext,keyword)
        self.show_plaintext(plaintext)
+
+   def Encode(self):
+       keyword = self.keyword_entry.get().lower()
+       plaintext = main.input_text.get("1.0","end").strip().lower()
+       ciphertext = AutokeyEncode(ciphertext,keyword)
+       self.show_plaintext(ciphertext)
        
+def SubmitButtons(self):
+    frame2 = tk.Frame(self)
+    frame2.pack()
+
+    self.encrypt_button = tk.Button(frame2,text="Encrypt",command=self.Encode)
+    self.encrypt_button.pack(side="left")
+   
+    self.decrypt_button = tk.Button(frame2,text="Decrypt",command=self.Decode)
+    self.decrypt_button.pack(side="left")
 
 class MainView(tk.Frame):
     def __init__(self, *args, **kwargs):
@@ -258,7 +343,7 @@ class MainView(tk.Frame):
             page.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
             
 
-        tk.Label(self,text="Ciphertext").pack()
+        #tk.Label(self,text="Ciphertext").pack()
         self.input_text = tk.Text(self,height=5,width=56)
         self.input_text.pack()
 
