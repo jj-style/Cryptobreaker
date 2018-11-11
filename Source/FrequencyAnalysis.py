@@ -27,6 +27,4 @@ def LetterFrequencyAnalysis(text):
         if letter not in letter_freq:
             letter_freq[letter] = 0
     sorted_letter_freq = sorted(letter_freq.items(), key=lambda x: x[1],reverse=True)
-    print(sorted_letter_freq)
-    print(most_common)
     return sorted_letter_freq

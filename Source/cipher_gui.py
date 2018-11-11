@@ -45,6 +45,15 @@ class PageFrequency(Page):
    def Decode(self):
        ciphertext = main.input_text.get("1.0","end").strip().lower()
        freqs = FrequencyAnalysis(ciphertext)
+       sorted_freqs = sorted(freqs,key=lambda x:x[1], reverse=True)
+       freq_text = ""
+       for i in range(len(sorted_freqs)):
+           freq_text += sorted_freqs[i][0] + ":" + str(sorted_freqs[i][1]) + " "
+           if i == len(sorted_freqs)//2:
+               freq_text += "\n"
+       tk.Label(self,text=freq_text).pack()
+       graph_frame = tk.Frame(self)
+       graph_frame.pack()
        x = []
        y = []
        for pair in freqs:
@@ -53,10 +62,9 @@ class PageFrequency(Page):
        f = Figure(figsize=(5,5), dpi=100)
        a = f.add_subplot(111)
        a.bar(x,y)
-       canvas = FigureCanvasTkAgg(f, self)
+       canvas = FigureCanvasTkAgg(f, graph_frame)
        canvas.draw()
-       canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
-
+       canvas.get_tk_widget().pack()
 
 class PageIOC(Page): #IOC
    def __init__(self, *args, **kwargs):
