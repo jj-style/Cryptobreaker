@@ -17,6 +17,7 @@ Current decryption tools supported:
 * Polyalphabetic affine cipher  
 * Beaufort cipher (including german variant)  
 * Autokey/Autoclave cipher  
+* Playfair cipher
   
   
 More ciphers to be addded soon. I have programmed some more but have not implememnted them to my GUI yet.  
