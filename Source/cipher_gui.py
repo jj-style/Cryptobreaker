@@ -202,15 +202,20 @@ class PagePolyAffine(Page): #PolyAffine
 
        self.keys_entry = tk.Entry(self)
        self.keys_entry.pack()
-       self.keys_entry.insert("end","[[a1,b1],[a2,b2],[a3,b3]]...")
+       self.keys_entry.insert("end","|a1,b1|a2,b2|...|")
 
        self.submit = tk.Button(self,text="Decrypt",command=self.Decode)
        self.submit.pack()
 
    def Decode(self):
        keys = self.keys_entry.get() #work our converting string list '[1]' to list [1]
+       keys = keys.split("|")
+       keys = [x for x in keys if x]
+       affine_keys = []
+       for key in keys:
+           affine_keys.append(list(map(int(key.split(",")))))
        ciphertext = main.input_text.get("1.0","end").strip().lower()
-       plaintext = PolyAffineDecode(ciphertext,keys)
+       plaintext = PolyAffineDecode(ciphertext,affine_keys)
        self.show_plaintext(plaintext)
 
 class PageAutokey(Page): #Autokey
