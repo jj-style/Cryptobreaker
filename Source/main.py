@@ -91,9 +91,13 @@ class PageKeyLength(Page): #Calculate key length
    def Decode(self):
        ciphertext = main.input_text.get("1.0","end").strip().lower()
        key_lengths = CalculateKeyLength(ciphertext)
-       key_length_text = ""
-       for length in key_lengths:
-           key_length_text += "Key length {}, IOC {}\n".format(length[0],length[1])
+       if len(key_lengths) != 0:
+           key_length_text = ""
+           for length in key_lengths:
+               key_length_text += "Key length {}, IOC {}\n".format(length[0],length[1])
+       else:
+           key_length = GetKeyLength(ciphertext)
+           key_length_text = "Key length {} (+- 1)\n".format(key_length)
        tk.Label(self,text=key_length_text).pack()
 
 class PageCaesar(Page):  #Caesar
@@ -186,7 +190,9 @@ class PageKeywordSub(Page): #Keyword Substitution
        if bruteforce == 0:
            plaintext = KeywordSubstitutionDecode(ciphertext,keyword)
        else:
-           plaintext = BruteforceDictionaryAttack(ciphertext,self.get_page_name())
+           plaintext, key_used = BruteforceDictionaryAttack(ciphertext,self.get_page_name())
+           self.keyword_entry.delete("0","end")
+           self.keyword_entry.insert("end",key_used)
        self.show_plaintext(plaintext)
 
    def Encode(self):
@@ -217,7 +223,9 @@ class PageVigenere(Page): #Vigenere
        if bruteforce == 0:
            plaintext = VigenereDecode(ciphertext,keyword)
        else:
-           plaintext = BruteforceDictionaryAttack(ciphertext,self.get_page_name())
+           plaintext, key_used = BruteforceDictionaryAttack(ciphertext,self.get_page_name())
+           self.keyword_entry.delete("0","end")
+           self.keyword_entry.insert("end",key_used)
        self.show_plaintext(plaintext)
 
    def Encode(self):
@@ -254,12 +262,16 @@ class PageBeaufort(Page): #Beaufort
            if bruteforce == 0:
                plaintext = BeaufortDecode(ciphertext,keyword)
            else:
-               plaintext = BruteforceDictionaryAttack(ciphertext,self.get_page_name())
+               plaintext, key_used = BruteforceDictionaryAttack(ciphertext,self.get_page_name())
+               self.keyword_entry.delete("0","end")
+               self.keyword_entry.insert("end",key_used)
        else:
            if bruteforce == 0:
                plaintext = BeaufortDecode(ciphertext,keyword,german=True)
            else:
-               plaintext = BruteforceDictionaryAttack(ciphertext,self.get_page_name(),german=True)
+               plaintext, key_used = BruteforceDictionaryAttack(ciphertext,self.get_page_name(),german=True)
+               self.keyword_entry.delete("0","end")
+               self.keyword_entry.insert("end",key_used)
            
        self.show_plaintext(plaintext)
 
@@ -327,7 +339,9 @@ class PageAutokey(Page): #Autokey
        if bruteforce == 0:
            plaintext = AutokeyDecode(ciphertext,keyword)
        else:
-           plaintext = BruteforceDictionaryAttack(ciphertext,self.get_page_name())
+           plaintext, key_used = BruteforceDictionaryAttack(ciphertext,self.get_page_name())
+           self.keyword_entry.delete("0","end")
+           self.keyword_entry.insert("end",key_used)
        self.show_plaintext(plaintext)
 
    def Encode(self):
@@ -355,7 +369,9 @@ class PagePlayfair(Page): #Playfair
        if bruteforce == 0:
            plaintext = PlayfairDecode(ciphertext,keyword)
        else:
-           plaintext = BruteforceDictionaryAttack(ciphertext,self.get_page_name())
+           plaintext, key_used = BruteforceDictionaryAttack(ciphertext,self.get_page_name())
+           self.keyword_entry.delete("0","end")
+           self.keyword_entry.insert("end",key_used)
        self.show_plaintext(plaintext)
 
    def Encode(self):
@@ -398,10 +414,10 @@ class MainView(tk.Frame):
         PagePlayfair(self)
         ]
 
-        container = tk.Frame(self)
+        self.container = tk.Frame(self)
         
         for page in self.pages:
-            page.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
+            page.place(in_=self.container, x=0, y=0, relwidth=1, relheight=1)
             
 
         self.input_text = tk.Text(self,height=5,width=56)
@@ -416,7 +432,7 @@ class MainView(tk.Frame):
         self.tool.pack()
 
         self.change_page()
-        container.pack(fill="both", expand=True)
+        self.container.pack(fill="both", expand=True)
 
     def change_page(self, *args, **kwargs):
         selected_page = self.control_variable.get()
