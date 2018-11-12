@@ -38,3 +38,14 @@ def CalculateKeyLength(text):
         print("Key length {}  IOC {}".format(prob_key[0],prob_key[1]))
     return probable_key_lengths
 
+def GetKeyLength(text):
+    text = RemovePunctuation(text)
+    text_l = len(text)
+    alphabet_l = len(string.ascii_lowercase)
+    text_ioc = IOC(text)
+    english_ioc = 0.0667
+
+    num = (english_ioc - (1/alphabet_l)) * text_l
+    den = ((text_l-1)*text_ioc) - (text_l*(1/alphabet_l)) + english_ioc
+    return round(num/den)
+

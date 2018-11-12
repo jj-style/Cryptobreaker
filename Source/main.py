@@ -10,6 +10,7 @@ from IndexOfCoincidence import *
 from FrequencyAnalysis import *
 from Playfair import *
 from DetectEnglish import *
+from DictionaryBruteforce import *
 
 import matplotlib
 matplotlib.use("TkAgg")
@@ -107,12 +108,7 @@ class PageCaesar(Page):  #Caesar
        self.shift = tk.Scale(frame1, variable=self.key, from_=0, to=26, orient="horizontal")
        self.shift.pack(side="left")
 
-       frame_check_button = tk.Frame(self)
-       frame_check_button.pack()
-
-       self.bruteforce = tk.IntVar()
-       self.bruteforce_button = tk.Checkbutton(frame_check_button,variable=self.bruteforce,text="Bruteforce")
-       self.bruteforce_button.pack()
+       BruteforceButton(self)
 
        SubmitButtons(self)
        
@@ -146,12 +142,7 @@ class PageAffine(Page): #Affine
        self.aslider.pack(side="left")
        self.bslider.pack(side="left")
 
-       frame_check_button = tk.Frame(self)
-       frame_check_button.pack()
-
-       self.bruteforce = tk.IntVar()
-       self.bruteforce_button = tk.Checkbutton(frame_check_button,variable=self.bruteforce,text="Bruteforce")
-       self.bruteforce_button.pack()
+       BruteforceButton(self)
 
        SubmitButtons(self)
 
@@ -184,12 +175,18 @@ class PageKeywordSub(Page): #Keyword Substitution
        self.keyword_entry.pack()
        self.keyword_entry.insert("end","Keyword")
 
+       BruteforceButton(self)
+
        SubmitButtons(self)
 
    def Decode(self):
        keyword = self.keyword_entry.get().lower()
        ciphertext = main.input_text.get("1.0","end").strip().lower()
-       plaintext = KeywordSubstitutionDecode(ciphertext,keyword)
+       bruteforce = self.bruteforce.get()
+       if bruteforce == 0:
+           plaintext = KeywordSubstitutionDecode(ciphertext,keyword)
+       else:
+           plaintext = BruteforceDictionaryAttack(ciphertext,self.get_page_name())
        self.show_plaintext(plaintext)
 
    def Encode(self):
@@ -209,12 +206,18 @@ class PageVigenere(Page): #Vigenere
        self.keyword_entry.pack()
        self.keyword_entry.insert("end","Key")
 
+       BruteforceButton(self)
+
        SubmitButtons(self)
 
    def Decode(self):
        keyword = self.keyword_entry.get().lower()
        ciphertext = main.input_text.get("1.0","end").strip().lower()
-       plaintext = VigenereDecode(ciphertext,keyword)
+       bruteforce = self.bruteforce.get()
+       if bruteforce == 0:
+           plaintext = VigenereDecode(ciphertext,keyword)
+       else:
+           plaintext = BruteforceDictionaryAttack(ciphertext,self.get_page_name())
        self.show_plaintext(plaintext)
 
    def Encode(self):
@@ -234,12 +237,11 @@ class PageBeaufort(Page): #Beaufort
        self.keyword_entry.pack()
        self.keyword_entry.insert("end","Key")
 
-       frame_check_button = tk.Frame(self)
-       frame_check_button.pack()
-
        self.german = tk.IntVar()
-       self.german_button = tk.Checkbutton(frame_check_button,variable=self.german,text="German Variant")
+       self.german_button = tk.Checkbutton(frame1,variable=self.german,text="German Variant")
        self.german_button.pack()
+
+       BruteforceButton(self)
 
        SubmitButtons(self)
 
@@ -247,10 +249,18 @@ class PageBeaufort(Page): #Beaufort
        keyword = self.keyword_entry.get().lower()
        ciphertext = main.input_text.get("1.0","end").strip().lower()
        german_variant = self.german.get()
+       bruteforce = self.bruteforce.get()
        if german_variant == 0:
-           plaintext = BeaufortDecode(ciphertext,keyword)
+           if bruteforce == 0:
+               plaintext = BeaufortDecode(ciphertext,keyword)
+           else:
+               plaintext = BruteforceDictionaryAttack(ciphertext,self.get_page_name())
        else:
-           plaintext = BeaufortDecode(ciphertext,keyword,german=True)
+           if bruteforce == 0:
+               plaintext = BeaufortDecode(ciphertext,keyword,german=True)
+           else:
+               plaintext = BruteforceDictionaryAttack(ciphertext,self.get_page_name(),german=True)
+           
        self.show_plaintext(plaintext)
 
    def Encode(self):
@@ -306,12 +316,18 @@ class PageAutokey(Page): #Autokey
        self.keyword_entry.pack()
        self.keyword_entry.insert("end","Key")
 
+       BruteforceButton(self)
+
        SubmitButtons(self)
 
    def Decode(self):
        keyword = self.keyword_entry.get().lower()
        ciphertext = main.input_text.get("1.0","end").strip().lower()
-       plaintext = AutokeyDecode(ciphertext,keyword)
+       bruteforce = self.bruteforce.get()
+       if bruteforce == 0:
+           plaintext = AutokeyDecode(ciphertext,keyword)
+       else:
+           plaintext = BruteforceDictionaryAttack(ciphertext,self.get_page_name())
        self.show_plaintext(plaintext)
 
    def Encode(self):
@@ -328,12 +344,18 @@ class PagePlayfair(Page): #Playfair
        self.keyword_entry.pack()
        self.keyword_entry.insert("end","Keyword")
 
+       BruteforceButton(self)
+
        SubmitButtons(self)
 
    def Decode(self):
        keyword = self.keyword_entry.get().lower()
        ciphertext = main.input_text.get("1.0","end").strip().lower()
-       plaintext = PlayfairDecode(ciphertext,keyword)
+       bruteforce = self.bruteforce.get()
+       if bruteforce == 0:
+           plaintext = PlayfairDecode(ciphertext,keyword)
+       else:
+           plaintext = BruteforceDictionaryAttack(ciphertext,self.get_page_name())
        self.show_plaintext(plaintext)
 
    def Encode(self):
@@ -341,6 +363,13 @@ class PagePlayfair(Page): #Playfair
        plaintext = main.input_text.get("1.0","end").strip().lower()
        ciphertext = PlayfairEncode(plaintext,keyword)
        self.show_plaintext(ciphertext)
+
+def BruteforceButton(self):
+    frame_check_button = tk.Frame(self)
+    frame_check_button.pack()
+    self.bruteforce = tk.IntVar()
+    self.bruteforce_button = tk.Checkbutton(frame_check_button,variable=self.bruteforce,text="Bruteforce")
+    self.bruteforce_button.pack()
        
 def SubmitButtons(self):
     frame2 = tk.Frame(self)
