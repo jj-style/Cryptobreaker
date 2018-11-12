@@ -1,8 +1,10 @@
 import string
+from RemovePunctuation import *
 
 alphabet = list(string.ascii_lowercase)
 
 def PolyAffineEncode(text,keys):
+    text = RemovePunctuation(text)
     ciphertext = ""
     for i in range(len(text)):
         key = keys[i%len(keys)]
@@ -13,6 +15,7 @@ def inv(a): #inverts number -> x^-1
     return next(i for i in range(1,26) if (i*a) % 26 == 1)
 
 def PolyAffineDecode(text,keys):
+    text = RemovePunctuation(text)
     plaintext = ""
     for i in range(len(text)):
         key = keys[i%len(keys)]

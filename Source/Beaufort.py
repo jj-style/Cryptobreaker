@@ -1,8 +1,10 @@
 import string
+from RemovePunctuation import *
 
 alphabet = list(string.ascii_lowercase)
 
 def BeaufortEncode(text,key,german=False):
+    text = RemovePunctuation(text)
     ciphertext = ""
     for i in range(len(text)):
         if not german:
@@ -12,6 +14,7 @@ def BeaufortEncode(text,key,german=False):
     return ciphertext
 
 def BeaufortDecode(text,key,german=False):
+    text = RemovePunctuation(text)
     plaintext = ""
     for i in range(len(text)):
         if not german:
