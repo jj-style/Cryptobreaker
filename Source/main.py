@@ -9,6 +9,7 @@ from Autokey import *
 from IndexOfCoincidence import *
 from FrequencyAnalysis import *
 from Playfair import *
+from DetectEnglish import *
 
 import matplotlib
 matplotlib.use("TkAgg")

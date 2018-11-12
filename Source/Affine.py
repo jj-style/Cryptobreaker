@@ -1,4 +1,5 @@
 import string
+from DetectEnglish import *
 
 alphabet = list(string.ascii_lowercase)
 
@@ -32,10 +33,10 @@ def AffineBruteforce(ciphertext):
         for j in range(26):
             try:
                 p = AffineDecode(ciphertext,i,j)
-                plaintexts.append(p)
+                if len(ciphertext) > 150 and checkEnglish(p):
+                    return p
+                else:
+                    plaintexts.append(p)
             except:
                 pass
     return "\n\n".join(plaintexts)
-
-##print(AffineEncode("hello",3,1))
-##print(AffineDecode("wniir",3,1))

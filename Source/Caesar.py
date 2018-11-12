@@ -1,4 +1,5 @@
 import string
+from DetectEnglish import *
 
 alphabet = list(string.ascii_lowercase)
 
@@ -25,5 +26,9 @@ def CaesarDecode(ciphertext,key,to_upper=False):
 def CaesarBruteforce(ciphertext):
     plaintexts = []
     for i in range(25):
-        plaintexts.append(CaesarDecode(ciphertext,i))
+        possible_plaintext = CaesarDecode(ciphertext,i)
+        if len(ciphertext) > 150 and checkEnglish(possible_plaintext):
+            return possible_plaintext
+        else:
+            plaintexts.append(possible_plaintext)
     return "\n\n".join(plaintexts)
