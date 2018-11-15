@@ -120,6 +120,7 @@ class PageCaesar(Page):  #Caesar
    def Decode(self):
        key = self.shift.get()
        ciphertext = main.input_text.get("1.0","end").strip().lower()
+       if self.remove_punctuation.get() == True: ciphertext = RemovePunctuation(ciphertext)
        bruteforce = self.bruteforce.get()
        if bruteforce == 0:
            plaintext = CaesarDecode(ciphertext,key)
@@ -130,6 +131,7 @@ class PageCaesar(Page):  #Caesar
    def Encode(self):
        key = self.shift.get()
        plaintext = main.input_text.get("1.0","end").strip().lower()
+       if self.remove_punctuation.get() == True: plaintext = RemovePunctuation(plaintext)
        ciphertext = CaesarEncode(plaintext,key)
        self.show_plaintext(ciphertext)
 
@@ -156,6 +158,7 @@ class PageAffine(Page): #Affine
        a = self.a.get()
        b = self.b.get()
        ciphertext = main.input_text.get("1.0","end").strip().lower()
+       if self.remove_punctuation.get() == True: ciphertext = RemovePunctuation(ciphertext)
        bruteforce = self.bruteforce.get()
        if bruteforce == 0:
            plaintext = AffineDecode(ciphertext,a,b)
@@ -167,7 +170,8 @@ class PageAffine(Page): #Affine
        a = self.a.get()
        b = self.b.get()
        plaintext = main.input_text.get("1.0","end").strip().lower()
-       ciphertext = AffineEncode(plaintext,key)
+       if self.remove_punctuation.get() == True: plaintext = RemovePunctuation(plaintext)
+       ciphertext = AffineEncode(plaintext,a,b)
        self.show_plaintext(ciphertext)
 
 class PageKeywordSub(Page): #Keyword Substitution
@@ -193,6 +197,7 @@ class PageKeywordSub(Page): #Keyword Substitution
    def Decode(self):
        keyword = self.keyword_entry.get().lower()
        ciphertext = main.input_text.get("1.0","end").strip().lower()
+       if self.remove_punctuation.get() == True: ciphertext = RemovePunctuation(ciphertext)
        bruteforce = self.bruteforce.get()
        shift = self.shift.get()
        if bruteforce == 0:
@@ -206,6 +211,7 @@ class PageKeywordSub(Page): #Keyword Substitution
    def Encode(self):
        keyword = self.keyword_entry.get().lower()
        plaintext = main.input_text.get("1.0","end").strip().lower()
+       if self.remove_punctuation.get() == True: plaintext = RemovePunctuation(plaintext)
        ciphertext = KeywordSubstitutionEncode(plaintext,keyword)
        self.show_plaintext(ciphertext)
 
@@ -228,6 +234,7 @@ class PageVigenere(Page): #Vigenere
    def Decode(self):
        keyword = self.keyword_entry.get().lower()
        ciphertext = main.input_text.get("1.0","end").strip().lower()
+       if self.remove_punctuation.get() == True: ciphertext = RemovePunctuation(ciphertext)
        bruteforce = self.bruteforce.get()
        if bruteforce == 0:
            plaintext = VigenereDecode(ciphertext,keyword)
@@ -240,6 +247,7 @@ class PageVigenere(Page): #Vigenere
    def Encode(self):
        keyword = self.keyword_entry.get().lower()
        plaintext = main.input_text.get("1.0","end").strip().lower()
+       if self.remove_punctuation.get() == True: plaintext = RemovePunctuation(plaintext)
        ciphertext = VigenereEncode(plaintext,keyword)
        self.show_plaintext(ciphertext)
 
@@ -266,6 +274,7 @@ class PageBeaufort(Page): #Beaufort
    def Decode(self):
        keyword = self.keyword_entry.get().lower()
        ciphertext = main.input_text.get("1.0","end").strip().lower()
+       if self.remove_punctuation.get() == True: ciphertext = RemovePunctuation(ciphertext)
        german_variant = self.german.get()
        bruteforce = self.bruteforce.get()
        if german_variant == 0:
@@ -288,6 +297,7 @@ class PageBeaufort(Page): #Beaufort
    def Encode(self):
        keyword = self.keyword_entry.get().lower()
        plaintext = main.input_text.get("1.0","end").strip().lower()
+       if self.remove_punctuation.get() == True: plaintext = RemovePunctuation(plaintext)
        german_variant = self.german.get()
        if german_variant == 0:
            ciphertext = BeaufortEncode(plaintext,keyword)
@@ -318,6 +328,7 @@ class PagePolyAffine(Page): #PolyAffine
        for key in keys:
            affine_keys.append(list(map(int(key.split(",")))))
        ciphertext = main.input_text.get("1.0","end").strip().lower()
+       if self.remove_punctuation.get() == True: ciphertext = RemovePunctuation(ciphertext)
        plaintext = PolyAffineDecode(ciphertext,affine_keys)
        self.show_plaintext(plaintext)
 
@@ -329,6 +340,7 @@ class PagePolyAffine(Page): #PolyAffine
        for key in keys:
            affine_keys.append(list(map(int(key.split(",")))))
        plaintext = main.input_text.get("1.0","end").strip().lower()
+       if self.remove_punctuation.get() == True: plaintext = RemovePunctuation(plaintext)
        ciphertext = PolyAffineEncode(plaintext,affine_keys)
        self.show_plaintext(ciphertext)
 
@@ -348,6 +360,7 @@ class PageAutokey(Page): #Autokey
    def Decode(self):
        keyword = self.keyword_entry.get().lower()
        ciphertext = main.input_text.get("1.0","end").strip().lower()
+       if self.remove_punctuation.get() == True: ciphertext = RemovePunctuation(ciphertext)
        bruteforce = self.bruteforce.get()
        if bruteforce == 0:
            plaintext = AutokeyDecode(ciphertext,keyword)
@@ -360,6 +373,7 @@ class PageAutokey(Page): #Autokey
    def Encode(self):
        keyword = self.keyword_entry.get().lower()
        plaintext = main.input_text.get("1.0","end").strip().lower()
+       if self.remove_punctuation.get() == True: plaintext = RemovePunctuation(plaintext)
        ciphertext = AutokeyEncode(plaintext,keyword)
        self.show_plaintext(ciphertext)
 
@@ -379,6 +393,7 @@ class PagePlayfair(Page): #Playfair
    def Decode(self):
        keyword = self.keyword_entry.get().lower()
        ciphertext = main.input_text.get("1.0","end").strip().lower()
+       if self.remove_punctuation.get() == True: ciphertext = RemovePunctuation(ciphertext)
        bruteforce = self.bruteforce.get()
        if bruteforce == 0:
            plaintext = PlayfairDecode(ciphertext,keyword)
@@ -391,6 +406,7 @@ class PagePlayfair(Page): #Playfair
    def Encode(self):
        keyword = self.keyword_entry.get().lower()
        plaintext = main.input_text.get("1.0","end").strip().lower()
+       if self.remove_punctuation.get() == True: plaintext = RemovePunctuation(plaintext)
        ciphertext = PlayfairEncode(plaintext,keyword)
        self.show_plaintext(ciphertext)
 
