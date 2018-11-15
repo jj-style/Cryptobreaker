@@ -18,22 +18,25 @@ def ReadFile(filename):
 
 english_words = ReadFile('english_words.txt')
 
-def BruteforceDictionaryAttack(ciphertext,cipher_name,german=False):
+def BruteforceDictionaryAttack(ciphertext,cipher_name,german=False,alph_shift=0):
     key_length = GetKeyLength(ciphertext)
+    key_length_dependent = ["Vigenere","Beaufort"]
     for word in english_words:
-        if len(word) in range(key_length-1,key_length+1):
+        if cipher_name not in key_length_dependent:
             if cipher_name == "Keyword Substitution":
-                plaintext = KeywordSubstitutionDecode(ciphertext,word)
-            elif cipher_name == "Vigenere":
-                plaintext = VigenereDecode(ciphertext,word)
-            elif cipher_name == "Beaufort":
-                plaintext = BeaufortDecode(ciphertext,word,german)
-            #POLYAFFINE - how does keyword map to keys???
+                plaintext = KeywordSubstitutionDecode(ciphertext,word,default_alph_shift=alph_shift)
             elif cipher_name == "Autokey":
                 plaintext = AutokeyDecode(ciphertext,word)
             elif cipher_name == "Playfair":
                 plaintext = PlayfairDecode(ciphertext,word)
-
-            if checkEnglish(plaintext) == True:
-                return plaintext,word
+        else:
+            plaintext = "zzzzz"
+            if len(word) in range(key_length-1,key_length+1):
+                if cipher_name == "Vigenere":
+                    plaintext = VigenereDecode(ciphertext,word)
+                elif cipher_name == "Beaufort":
+                    plaintext = BeaufortDecode(ciphertext,word,german)
+                #POLYAFFINE - how does keyword map to keys???
+        if checkEnglish(plaintext) == True:
+            return plaintext,word
     return "Cipher could not be broken using a dictionary attack","Key not found"

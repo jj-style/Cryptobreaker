@@ -113,6 +113,7 @@ class PageCaesar(Page):  #Caesar
        self.shift.pack(side="left")
 
        BruteforceButton(self)
+       RemovePunctuationButtons(self)
 
        SubmitButtons(self)
        
@@ -147,6 +148,7 @@ class PageAffine(Page): #Affine
        self.bslider.pack(side="left")
 
        BruteforceButton(self)
+       RemovePunctuationButtons(self)
 
        SubmitButtons(self)
 
@@ -179,7 +181,12 @@ class PageKeywordSub(Page): #Keyword Substitution
        self.keyword_entry.pack()
        self.keyword_entry.insert("end","Keyword")
 
+       self.shift = tk.IntVar()
+       self.shift_slider = tk.Scale(frame1, variable=self.shift, from_=0, to=26, orient="horizontal",label="alphabet shift")
+       self.shift_slider.pack(side="left")
+
        BruteforceButton(self)
+       RemovePunctuationButtons(self)
 
        SubmitButtons(self)
 
@@ -187,10 +194,11 @@ class PageKeywordSub(Page): #Keyword Substitution
        keyword = self.keyword_entry.get().lower()
        ciphertext = main.input_text.get("1.0","end").strip().lower()
        bruteforce = self.bruteforce.get()
+       shift = self.shift.get()
        if bruteforce == 0:
-           plaintext = KeywordSubstitutionDecode(ciphertext,keyword)
+           plaintext = KeywordSubstitutionDecode(ciphertext,keyword,default_alph_shift=shift)
        else:
-           plaintext, key_used = BruteforceDictionaryAttack(ciphertext,self.get_page_name())
+           plaintext, key_used = BruteforceDictionaryAttack(ciphertext,self.get_page_name(),alph_shift=shift)
            self.keyword_entry.delete("0","end")
            self.keyword_entry.insert("end",key_used)
        self.show_plaintext(plaintext)
@@ -213,6 +221,7 @@ class PageVigenere(Page): #Vigenere
        self.keyword_entry.insert("end","Key")
 
        BruteforceButton(self)
+       RemovePunctuationButtons(self)
 
        SubmitButtons(self)
 
@@ -250,6 +259,7 @@ class PageBeaufort(Page): #Beaufort
        self.german_button.pack()
 
        BruteforceButton(self)
+       RemovePunctuationButtons(self)
 
        SubmitButtons(self)
 
@@ -296,6 +306,8 @@ class PagePolyAffine(Page): #PolyAffine
        self.keys_entry.pack()
        self.keys_entry.insert("end","|a1,b1|a2,b2|...|")
 
+       RemovePunctuationButtons(self)
+
        SubmitButtons(self)
 
    def Decode(self):
@@ -329,6 +341,7 @@ class PageAutokey(Page): #Autokey
        self.keyword_entry.insert("end","Key")
 
        BruteforceButton(self)
+       RemovePunctuationButtons(self)
 
        SubmitButtons(self)
 
@@ -359,6 +372,7 @@ class PagePlayfair(Page): #Playfair
        self.keyword_entry.insert("end","Keyword")
 
        BruteforceButton(self)
+       RemovePunctuationButtons(self)
 
        SubmitButtons(self)
 
@@ -386,6 +400,11 @@ def BruteforceButton(self):
     self.bruteforce = tk.IntVar()
     self.bruteforce_button = tk.Checkbutton(frame_check_button,variable=self.bruteforce,text="Bruteforce")
     self.bruteforce_button.pack()
+
+def RemovePunctuationButtons(self):
+    self.remove_punctuation = tk.IntVar()
+    self.remove_punctuation_button = tk.Checkbutton(self,variable=self.remove_punctuation,text="Remove Punctuation")
+    self.remove_punctuation_button.pack()
        
 def SubmitButtons(self):
     frame2 = tk.Frame(self)
@@ -430,7 +449,7 @@ class MainView(tk.Frame):
         self.control_variable.set(self.TOOLS[0])
         self.tool = tk.OptionMenu(self,self.control_variable, *self.TOOLS,command=self.change_page)
         self.tool.pack()
-
+        
         self.change_page()
         self.container.pack(fill="both", expand=True)
 
