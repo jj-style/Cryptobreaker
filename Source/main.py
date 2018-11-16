@@ -324,7 +324,7 @@ class PagePolyAffine(Page): #PolyAffine
        keys = [x for x in keys if x]
        affine_keys = []
        for key in keys:
-           affine_keys.append(list(map(int(key.split(",")))))
+           affine_keys.append(list(map(int,key.split(","))))
        ciphertext = self.read_in_text()
        plaintext = PolyAffineDecode(ciphertext,affine_keys)
        self.show_plaintext(plaintext)
@@ -335,7 +335,7 @@ class PagePolyAffine(Page): #PolyAffine
        keys = [x for x in keys if x]
        affine_keys = []
        for key in keys:
-           affine_keys.append(list(map(int(key.split(",")))))
+           affine_keys.append(list(map(int,key.split(","))))
        plaintext = self.read_in_text()
        ciphertext = PolyAffineEncode(plaintext,affine_keys)
        self.show_plaintext(ciphertext)
