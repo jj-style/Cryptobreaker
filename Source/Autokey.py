@@ -1,5 +1,8 @@
 from Vigenere import *
 from RemovePunctuation import *
+import string
+
+alphabet = string.ascii_lowercase
 
 def AutokeyEncode(plaintext,key):
     key = key + plaintext
@@ -7,11 +10,13 @@ def AutokeyEncode(plaintext,key):
 
 def AutokeyDecode(ciphertext,key):
     key = list(key)
-    ciphertext = RemovePunctuation(ciphertext)
     plaintext = ""
     for i in range(len(ciphertext)):
-        current_key = key.pop(0)
-        plaintext_letter = VigenereDecode(ciphertext[i],current_key)
-        key.append(plaintext_letter)
+        if ciphertext[i] in alphabet:
+            current_key = key.pop(0)
+            plaintext_letter = VigenereDecode(ciphertext[i],current_key)
+            key.append(plaintext_letter)
+        else:
+            plaintext_letter = ciphertext[i]
         plaintext += plaintext_letter
     return plaintext

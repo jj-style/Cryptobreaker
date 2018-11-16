@@ -30,8 +30,6 @@ def KeywordSubstitutionEncode(plaintext,key,default_alph_shift=0):
 def KeywordSubstitutionDecode(ciphertext,key,default_alph_shift=0):
     default_alphabet = list(string.ascii_lowercase)
     key_alphabet = CreateAlphabet(key,default_alph_shift)
-    #print("".join(default_alphabet))
-    #print("".join(key_alphabet))
     plaintext = ""
     for letter in ciphertext:
         if letter not in default_alphabet:

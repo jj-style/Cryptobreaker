@@ -10,8 +10,6 @@ def FrequencyAnalysis(text):
     for letter in text:
         if letter in alphabet:
             analysis[alphabet.index(letter)][1] += 1
-    for letter in analysis:
-        print(letter[0],"*"*letter[1])
     return analysis
 
 def LetterFrequencyAnalysis(text):

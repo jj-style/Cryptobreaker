@@ -36,7 +36,15 @@ class Page(tk.Frame):
         self.output_text.delete("1.0","end")
         self.output_text.insert("end",plaintext)
 
-
+    def read_in_text(self):
+        in_text = main.input_text.get("1.0","end").strip().lower()
+        punct_choice = self.punctuation_option.get()        
+        if punct_choice == self.punct_options[0]:
+            return in_text
+        elif punct_choice == self.punct_options[1]:
+            return RemovePunctuation(in_text,remove_spaces=False)
+        else:
+            return RemovePunctuation(in_text)
 class PageFrequency(Page):
    def __init__(self, *args, **kwargs):
        Page.__init__(self, "Frequency Analysis",*args, **kwargs)
@@ -113,14 +121,13 @@ class PageCaesar(Page):  #Caesar
        self.shift.pack(side="left")
 
        BruteforceButton(self)
-       RemovePunctuationButtons(self)
+       RemovePunctuationMenu(self)
 
        SubmitButtons(self)
        
    def Decode(self):
        key = self.shift.get()
-       ciphertext = main.input_text.get("1.0","end").strip().lower()
-       if self.remove_punctuation.get() == True: ciphertext = RemovePunctuation(ciphertext)
+       ciphertext = self.read_in_text()
        bruteforce = self.bruteforce.get()
        if bruteforce == 0:
            plaintext = CaesarDecode(ciphertext,key)
@@ -130,8 +137,7 @@ class PageCaesar(Page):  #Caesar
 
    def Encode(self):
        key = self.shift.get()
-       plaintext = main.input_text.get("1.0","end").strip().lower()
-       if self.remove_punctuation.get() == True: plaintext = RemovePunctuation(plaintext)
+       plaintext = self.read_in_text()
        ciphertext = CaesarEncode(plaintext,key)
        self.show_plaintext(ciphertext)
 
@@ -150,15 +156,14 @@ class PageAffine(Page): #Affine
        self.bslider.pack(side="left")
 
        BruteforceButton(self)
-       RemovePunctuationButtons(self)
+       RemovePunctuationMenu(self)
 
        SubmitButtons(self)
 
    def Decode(self):
        a = self.a.get()
        b = self.b.get()
-       ciphertext = main.input_text.get("1.0","end").strip().lower()
-       if self.remove_punctuation.get() == True: ciphertext = RemovePunctuation(ciphertext)
+       ciphertext = self.read_in_text()
        bruteforce = self.bruteforce.get()
        if bruteforce == 0:
            plaintext = AffineDecode(ciphertext,a,b)
@@ -169,8 +174,7 @@ class PageAffine(Page): #Affine
    def Encode(self):
        a = self.a.get()
        b = self.b.get()
-       plaintext = main.input_text.get("1.0","end").strip().lower()
-       if self.remove_punctuation.get() == True: plaintext = RemovePunctuation(plaintext)
+       plaintext = self.read_in_text()
        ciphertext = AffineEncode(plaintext,a,b)
        self.show_plaintext(ciphertext)
 
@@ -190,14 +194,13 @@ class PageKeywordSub(Page): #Keyword Substitution
        self.shift_slider.pack(side="left")
 
        BruteforceButton(self)
-       RemovePunctuationButtons(self)
+       RemovePunctuationMenu(self)
 
        SubmitButtons(self)
 
    def Decode(self):
        keyword = self.keyword_entry.get().lower()
-       ciphertext = main.input_text.get("1.0","end").strip().lower()
-       if self.remove_punctuation.get() == True: ciphertext = RemovePunctuation(ciphertext)
+       ciphertext = self.read_in_text()
        bruteforce = self.bruteforce.get()
        shift = self.shift.get()
        if bruteforce == 0:
@@ -210,8 +213,7 @@ class PageKeywordSub(Page): #Keyword Substitution
 
    def Encode(self):
        keyword = self.keyword_entry.get().lower()
-       plaintext = main.input_text.get("1.0","end").strip().lower()
-       if self.remove_punctuation.get() == True: plaintext = RemovePunctuation(plaintext)
+       plaintext = self.read_in_text()
        ciphertext = KeywordSubstitutionEncode(plaintext,keyword)
        self.show_plaintext(ciphertext)
 
@@ -227,14 +229,13 @@ class PageVigenere(Page): #Vigenere
        self.keyword_entry.insert("end","Key")
 
        BruteforceButton(self)
-       RemovePunctuationButtons(self)
+       RemovePunctuationMenu(self)
 
        SubmitButtons(self)
 
    def Decode(self):
        keyword = self.keyword_entry.get().lower()
-       ciphertext = main.input_text.get("1.0","end").strip().lower()
-       if self.remove_punctuation.get() == True: ciphertext = RemovePunctuation(ciphertext)
+       ciphertext = self.read_in_text()
        bruteforce = self.bruteforce.get()
        if bruteforce == 0:
            plaintext = VigenereDecode(ciphertext,keyword)
@@ -246,8 +247,7 @@ class PageVigenere(Page): #Vigenere
 
    def Encode(self):
        keyword = self.keyword_entry.get().lower()
-       plaintext = main.input_text.get("1.0","end").strip().lower()
-       if self.remove_punctuation.get() == True: plaintext = RemovePunctuation(plaintext)
+       plaintext = self.read_in_text()
        ciphertext = VigenereEncode(plaintext,keyword)
        self.show_plaintext(ciphertext)
 
@@ -267,14 +267,13 @@ class PageBeaufort(Page): #Beaufort
        self.german_button.pack()
 
        BruteforceButton(self)
-       RemovePunctuationButtons(self)
+       RemovePunctuationMenu(self)
 
        SubmitButtons(self)
 
    def Decode(self):
        keyword = self.keyword_entry.get().lower()
-       ciphertext = main.input_text.get("1.0","end").strip().lower()
-       if self.remove_punctuation.get() == True: ciphertext = RemovePunctuation(ciphertext)
+       ciphertext = self.read_in_text()
        german_variant = self.german.get()
        bruteforce = self.bruteforce.get()
        if german_variant == 0:
@@ -296,8 +295,7 @@ class PageBeaufort(Page): #Beaufort
 
    def Encode(self):
        keyword = self.keyword_entry.get().lower()
-       plaintext = main.input_text.get("1.0","end").strip().lower()
-       if self.remove_punctuation.get() == True: plaintext = RemovePunctuation(plaintext)
+       plaintext = self.read_in_text()
        german_variant = self.german.get()
        if german_variant == 0:
            ciphertext = BeaufortEncode(plaintext,keyword)
@@ -316,7 +314,7 @@ class PagePolyAffine(Page): #PolyAffine
        self.keys_entry.pack()
        self.keys_entry.insert("end","|a1,b1|a2,b2|...|")
 
-       RemovePunctuationButtons(self)
+       RemovePunctuationMenu(self)
 
        SubmitButtons(self)
 
@@ -327,8 +325,7 @@ class PagePolyAffine(Page): #PolyAffine
        affine_keys = []
        for key in keys:
            affine_keys.append(list(map(int(key.split(",")))))
-       ciphertext = main.input_text.get("1.0","end").strip().lower()
-       if self.remove_punctuation.get() == True: ciphertext = RemovePunctuation(ciphertext)
+       ciphertext = self.read_in_text()
        plaintext = PolyAffineDecode(ciphertext,affine_keys)
        self.show_plaintext(plaintext)
 
@@ -339,8 +336,7 @@ class PagePolyAffine(Page): #PolyAffine
        affine_keys = []
        for key in keys:
            affine_keys.append(list(map(int(key.split(",")))))
-       plaintext = main.input_text.get("1.0","end").strip().lower()
-       if self.remove_punctuation.get() == True: plaintext = RemovePunctuation(plaintext)
+       plaintext = self.read_in_text()
        ciphertext = PolyAffineEncode(plaintext,affine_keys)
        self.show_plaintext(ciphertext)
 
@@ -353,14 +349,13 @@ class PageAutokey(Page): #Autokey
        self.keyword_entry.insert("end","Key")
 
        BruteforceButton(self)
-       RemovePunctuationButtons(self)
+       RemovePunctuationMenu(self)
 
        SubmitButtons(self)
 
    def Decode(self):
        keyword = self.keyword_entry.get().lower()
-       ciphertext = main.input_text.get("1.0","end").strip().lower()
-       if self.remove_punctuation.get() == True: ciphertext = RemovePunctuation(ciphertext)
+       ciphertext = self.read_in_text()
        bruteforce = self.bruteforce.get()
        if bruteforce == 0:
            plaintext = AutokeyDecode(ciphertext,keyword)
@@ -372,8 +367,7 @@ class PageAutokey(Page): #Autokey
 
    def Encode(self):
        keyword = self.keyword_entry.get().lower()
-       plaintext = main.input_text.get("1.0","end").strip().lower()
-       if self.remove_punctuation.get() == True: plaintext = RemovePunctuation(plaintext)
+       plaintext = self.read_in_text()
        ciphertext = AutokeyEncode(plaintext,keyword)
        self.show_plaintext(ciphertext)
 
@@ -386,14 +380,13 @@ class PagePlayfair(Page): #Playfair
        self.keyword_entry.insert("end","Keyword")
 
        BruteforceButton(self)
-       RemovePunctuationButtons(self)
 
        SubmitButtons(self)
 
    def Decode(self):
        keyword = self.keyword_entry.get().lower()
        ciphertext = main.input_text.get("1.0","end").strip().lower()
-       if self.remove_punctuation.get() == True: ciphertext = RemovePunctuation(ciphertext)
+       ciphertext = RemovePunctuation(ciphertext)
        bruteforce = self.bruteforce.get()
        if bruteforce == 0:
            plaintext = PlayfairDecode(ciphertext,keyword)
@@ -406,7 +399,7 @@ class PagePlayfair(Page): #Playfair
    def Encode(self):
        keyword = self.keyword_entry.get().lower()
        plaintext = main.input_text.get("1.0","end").strip().lower()
-       if self.remove_punctuation.get() == True: plaintext = RemovePunctuation(plaintext)
+       plaintext = RemovePunctuation(plaintext)
        ciphertext = PlayfairEncode(plaintext,keyword)
        self.show_plaintext(ciphertext)
 
@@ -417,10 +410,14 @@ def BruteforceButton(self):
     self.bruteforce_button = tk.Checkbutton(frame_check_button,variable=self.bruteforce,text="Bruteforce")
     self.bruteforce_button.pack()
 
-def RemovePunctuationButtons(self):
-    self.remove_punctuation = tk.IntVar()
-    self.remove_punctuation_button = tk.Checkbutton(self,variable=self.remove_punctuation,text="Remove Punctuation")
-    self.remove_punctuation_button.pack()
+def RemovePunctuationMenu(self):
+    self.punct_options = ["Retain punctuation and spaces","Remove punctuation and keep spaces","Remove punctuation and spaces"]
+    self.punctuation_option = tk.StringVar(self)
+    self.punctuation_option.set(self.punct_options[0])
+    self.punctuation_menu = tk.OptionMenu(self,self.punctuation_option, *self.punct_options)
+    self.punctuation_menu.pack()
+
+    
        
 def SubmitButtons(self):
     frame2 = tk.Frame(self)
@@ -455,15 +452,17 @@ class MainView(tk.Frame):
             page.place(in_=self.container, x=0, y=0, relwidth=1, relheight=1)
             
 
-        self.input_text = tk.Text(self,height=5,width=56)
-        self.input_text.pack()
+        main_frame = tk.Frame(self)
+        main_frame.pack()
+        self.input_text = tk.Text(main_frame,height=5)
+        self.input_text.pack(fill="x")
 
         self.TOOLS = []
         for page in self.pages:
             self.TOOLS.append(page.get_page_name())
         self.control_variable = tk.StringVar(self)
         self.control_variable.set(self.TOOLS[0])
-        self.tool = tk.OptionMenu(self,self.control_variable, *self.TOOLS,command=self.change_page)
+        self.tool = tk.OptionMenu(main_frame,self.control_variable, *self.TOOLS,command=self.change_page)
         self.tool.pack()
         
         self.change_page()
@@ -476,7 +475,6 @@ class MainView(tk.Frame):
             if selected_page == page.get_page_name():
                 page.show()
                 break
-
 
 if __name__ == "__main__":
     root = tk.Tk()
