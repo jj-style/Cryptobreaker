@@ -1,6 +1,7 @@
 import tkinter as tk
 from Caesar import *
 from Affine import *
+from ColumnTransposition import *
 from KeywordSubstitution import *
 from Vigenere import *
 from Beaufort import *
@@ -38,13 +39,17 @@ class Page(tk.Frame):
 
     def read_in_text(self):
         in_text = main.input_text.get("1.0","end").strip().lower()
-        punct_choice = self.punctuation_option.get()        
-        if punct_choice == self.punct_options[0]:
-            return in_text
-        elif punct_choice == self.punct_options[1]:
-            return RemovePunctuation(in_text,remove_spaces=False)
-        else:
+        try:
+            punct_choice = self.punctuation_option.get()        
+            if punct_choice == self.punct_options[0]:
+                return in_text
+            elif punct_choice == self.punct_options[1]:
+                return RemovePunctuation(in_text,remove_spaces=False)
+            else:
+                return RemovePunctuation(in_text)
+        except:
             return RemovePunctuation(in_text)
+        
 class PageFrequency(Page):
    def __init__(self, *args, **kwargs):
        Page.__init__(self, "Frequency Analysis",*args, **kwargs)
@@ -176,6 +181,40 @@ class PageAffine(Page): #Affine
        b = self.b.get()
        plaintext = self.read_in_text()
        ciphertext = AffineEncode(plaintext,a,b)
+       self.show_plaintext(ciphertext)
+
+class PageColumnTransposition(Page):  #Column Transposition
+   def __init__(self, *args, **kwargs):
+       Page.__init__(self,"Column Transposition", *args, **kwargs)
+
+       frame1 = tk.Frame(self)
+       frame1.pack()
+
+       self.keyword_entry = tk.Entry(frame1)
+       self.keyword_entry.pack()
+       self.keyword_entry.insert("end","Keyword or permutation (e.g. 2,1,3)")
+
+       self.regular = tk.IntVar()
+       self.regular_button = tk.Checkbutton(frame1,variable=self.regular,text="Regular")
+       self.regular_button.pack()
+
+       SubmitButtons(self)
+       
+   def Decode(self):
+       keyword = self.keyword_entry.get().strip().lower()
+       ciphertext = self.read_in_text()
+       ciphertext = RemovePunctuation(ciphertext)
+       plaintext = TranspositionDecode(ciphertext,keyword)
+       self.show_plaintext(plaintext)
+
+   def Encode(self):
+       keyword = self.keyword_entry.get().strip().lower()
+       plaintext = self.read_in_text()
+       plaintext = RemovePunctuation(plaintext)
+       if self.regular.get() == 1:
+           ciphertext = TranspositionEncode(plaintext,keyword,regular=True)
+       else:
+           ciphertext = TranspositionEncode(plaintext,keyword)
        self.show_plaintext(ciphertext)
 
 class PageKeywordSub(Page): #Keyword Substitution
@@ -438,6 +477,7 @@ class MainView(tk.Frame):
         PageKeyLength(self),
         PageCaesar(self),
         PageAffine(self),
+        PageColumnTransposition(self),
         PageKeywordSub(self),
         PageVigenere(self),
         PageBeaufort(self),

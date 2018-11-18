@@ -4,8 +4,12 @@ from SplitToBlocks import *
 
 alphabet = list(string.ascii_lowercase)
 
-def TranspositionEncode(text,keyword):
+def TranspositionEncode(text,keyword,regular=False):
     ciphertext = ""
+    if not keyword.isalpha():
+        keyword = list(map(int,keyword.split(",")))
+    if regular:
+        text += ((len(keyword)-1)%len(text))*"x"
     split_text = Blocks(len(keyword),text)
     grid = []
     for i in range(len(keyword)):
@@ -14,12 +18,8 @@ def TranspositionEncode(text,keyword):
     ciphertext_grid = []
     for i in range(len(keyword)):
         ciphertext_grid.append(grid[i][1])
-    print(ReconstructBlocks(ciphertext_grid))
+    ciphertext = ReconstructBlocks(ciphertext_grid)
     return ciphertext
 
-def TranspositionDecode(ciphertext,key,to_upper=False):
-    plaintext = ""
-    return plaintext
-           
-
-TranspositionEncode('helloworld','key')
+def TranspositionDecode(text,keyword):
+    return TranspositionEncode(text,keyword)

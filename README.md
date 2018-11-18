@@ -10,15 +10,17 @@ Current decryption tools supported:
 * Frequency Analysis  
 * Index of coincidence  
 * Probable key length calculator (for polyalphabetic ciphers)  
-* Caesar shift (inc. bruteforce option)  
-* Affine shift (inc. bruteforce option)  
+* Caesar shift  
+* Affine shift  
+* Column transposition  
 * Keyword substitution cipher  
 * Vigenere cipher  
 * Polyalphabetic affine cipher  
 * Beaufort cipher (including german variant)  
 * Autokey/Autoclave cipher  
-* Playfair cipher
+* Playfair cipher  
   
+Most ciphers include a dictionary bruteforce option. Caesar and affine include a normal bruteforce.  
   
 More ciphers to be addded soon. I have programmed some more but have not implememnted them to my GUI yet.  
 I have also programmed a semi-automatic vigenere cipher breaker which I am currently implementing.  

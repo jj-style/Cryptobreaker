@@ -15,11 +15,14 @@ def ShowBlocks(blocks):
         
 def ReconstructBlocks(blocks):
     text = ""
-    for i in range(len(blocks[0])):
+    largest_block = len(blocks[0])
+    for i in range(1,len(blocks)):
+        if len(blocks[i]) > largest_block:
+            largest_block = len(blocks[i])
+    for i in range(largest_block):
         for block in blocks:
             try:
                 text += block[i]
             except:
                 pass
-    #print(text)
     return text
