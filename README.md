@@ -13,6 +13,7 @@ Current decryption tools supported:
 * Caesar shift  
 * Affine shift  
 * Column transposition  
+* Railfence cipher  
 * Keyword substitution cipher  
 * Vigenere cipher  
 * Polyalphabetic affine cipher  

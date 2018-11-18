@@ -2,6 +2,7 @@ import tkinter as tk
 from Caesar import *
 from Affine import *
 from ColumnTransposition import *
+from Railfence import *
 from KeywordSubstitution import *
 from Vigenere import *
 from Beaufort import *
@@ -215,6 +216,32 @@ class PageColumnTransposition(Page):  #Column Transposition
            ciphertext = TranspositionEncode(plaintext,keyword,regular=True)
        else:
            ciphertext = TranspositionEncode(plaintext,keyword)
+       self.show_plaintext(ciphertext)
+
+class PageRailfence(Page):  #Railfence
+   def __init__(self, *args, **kwargs):
+       Page.__init__(self,"Railfence", *args, **kwargs)
+
+       frame1 = tk.Frame(self)
+       frame1.pack()
+
+       tk.Label(frame1,text="Number of lines").pack(side="left")
+       self.lines = tk.IntVar()
+       self.lines_scale = tk.Scale(frame1, variable=self.lines, from_=1, to_=50,orient="horizontal")
+       self.lines_scale.pack(side="left",fill="x",expand=True)
+       
+       SubmitButtons(self)
+       
+   def Decode(self):
+       lines = self.lines.get()
+       ciphertext = self.read_in_text()
+       plaintext = RailfenceDecode(ciphertext,lines)
+       self.show_plaintext(plaintext)
+
+   def Encode(self):
+       lines = self.lines.get()
+       plaintext = self.read_in_text()
+       ciphertext = RailfenceEncode(plaintext,lines)
        self.show_plaintext(ciphertext)
 
 class PageKeywordSub(Page): #Keyword Substitution
@@ -478,6 +505,7 @@ class MainView(tk.Frame):
         PageCaesar(self),
         PageAffine(self),
         PageColumnTransposition(self),
+        PageRailfence(self),
         PageKeywordSub(self),
         PageVigenere(self),
         PageBeaufort(self),

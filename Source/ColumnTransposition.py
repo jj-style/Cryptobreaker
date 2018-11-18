@@ -1,5 +1,4 @@
 import string
-from DetectEnglish import *
 from SplitToBlocks import *
 
 alphabet = list(string.ascii_lowercase)
