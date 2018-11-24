@@ -15,14 +15,32 @@ def ShowBlocks(blocks):
         
 def ReconstructBlocks(blocks):
     text = ""
-    largest_block = len(blocks[0])
-    for i in range(1,len(blocks)):
-        if len(blocks[i]) > largest_block:
-            largest_block = len(blocks[i])
-    for i in range(largest_block):
+    for i in range(len(blocks[0])):
         for block in blocks:
             try:
                 text += block[i]
             except:
                 pass
+    #print(text)
     return text
+
+def ReconstructColumns(columns):
+    text = ""
+    for col in columns:
+        text += "".join(col)
+    return text
+
+def SplitToColumns(ciphertext,key_length):
+    columns = [[None for x in range(len(ciphertext)//key_length)] for i in range(key_length)]
+    count = 0
+    col_index = 0
+    for letter in ciphertext:
+        if None in columns[count]:
+            columns[count][col_index] = letter
+            col_index += 1
+        else:
+            count += 1
+            col_index = 0
+            columns[count][col_index] = letter
+            col_index += 1
+    return columns
