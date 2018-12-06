@@ -114,6 +114,19 @@ class PageKeyLength(Page): #Calculate key length
            key_length_text = "Key length {} (+- 1)\n".format(key_length)
        tk.Label(self,text=key_length_text).pack()
 
+class PageReverseText(Page): #Calculate key length
+   def __init__(self, *args, **kwargs):
+       Page.__init__(self,"Reverse Text",*args, **kwargs)
+
+       self.submit = tk.Button(self,text="Reverse text",command=self.Decode)
+       self.submit.pack()
+
+   def Decode(self):
+       text = main.input_text.get("1.0","end").strip().lower()
+       reversed_text = text[::-1]
+       self.show_plaintext(reversed_text)
+       
+
 class PageCaesar(Page):  #Caesar
    def __init__(self, *args, **kwargs):
        Page.__init__(self,"Caesar Shift", *args, **kwargs)
@@ -502,6 +515,7 @@ class MainView(tk.Frame):
         PageFrequency(self),
         PageIOC(self),
         PageKeyLength(self),
+        PageReverseText(self),
         PageCaesar(self),
         PageAffine(self),
         PageColumnTransposition(self),

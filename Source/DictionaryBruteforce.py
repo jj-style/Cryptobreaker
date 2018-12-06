@@ -20,6 +20,7 @@ english_words = ReadFile('english_words.txt')
 
 def BruteforceDictionaryAttack(ciphertext,cipher_name,german=False,alph_shift=0):
     key_length = GetKeyLength(ciphertext)
+    key_length = CalculateKeyLength(ciphertext)[0][0]
     key_length_dependent = ["Vigenere","Beaufort"]
     for word in english_words:
         if cipher_name not in key_length_dependent:
@@ -31,7 +32,7 @@ def BruteforceDictionaryAttack(ciphertext,cipher_name,german=False,alph_shift=0)
                 plaintext = PlayfairDecode(ciphertext,word)
         else:
             plaintext = "zzzzz"
-            if len(word) in range(key_length-1,key_length+1):
+            if len(word) == key_length: #in range(key_length-1,key_length+1):
                 if cipher_name == "Vigenere":
                     plaintext = VigenereDecode(ciphertext,word)
                 elif cipher_name == "Beaufort":

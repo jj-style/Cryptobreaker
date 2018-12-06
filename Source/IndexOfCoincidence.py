@@ -34,8 +34,8 @@ def CalculateKeyLength(text):
         if average_ioc > 0.059 and average_ioc < 0.071:
             probable_key_lengths.append([i,average_ioc])
 
-    for prob_key in probable_key_lengths:
-        print("Key length {}  IOC {}".format(prob_key[0],prob_key[1]))
+##    for prob_key in probable_key_lengths:
+##        print("Key length {}  IOC {}".format(prob_key[0],prob_key[1]))
     return probable_key_lengths
 
 def GetKeyLength(text):
