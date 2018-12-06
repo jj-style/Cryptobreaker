@@ -10,6 +10,7 @@ Current decryption tools supported:
 * Frequency Analysis  
 * Index of coincidence  
 * Probable key length calculator (for polyalphabetic ciphers)  
+* Reverse text  
 * Caesar shift  
 * Affine shift  
 * Column transposition  
